@@ -11,13 +11,14 @@ const loginValidator = require("app/http/validators/loginValidator");
 const notAdminMiddleware = require("app/http/middleware/notAdminMiddleware");
 
 router.get("/login", adminController.login);
-router.post("/login", adminController.loginProccess);
+router.post("/login", loginValidator.handle(), adminController.loginProccess);
 
 //master page
 router.use((req, res, next) => {
   res.locals.layout = "admin/master";
   next();
 });
+
 router.post("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) {
@@ -26,11 +27,10 @@ router.post("/logout", (req, res, next) => {
     res.redirect("/");
   });
 });
+
 //admin Rouer
 router.get("/mmdalam", notAdminMiddleware.handle, adminController.index);
 router.post("/seen/:id", notAdminMiddleware.handle, adminController.seen);
 router.post("/delete/:id", notAdminMiddleware.handle, adminController.delete);
-
-router.get("/excel", notAdminMiddleware.handle, adminController.excel);
 
 module.exports = router;

@@ -10,8 +10,9 @@
         <th>#</th>
         <th>نام و نام خانوادگی</th>
         <th>موضوع</th>
-        <th>متن</th>
         <th>شماره تلفن</th>
+        <th>متن</th>
+        <th>خوانده شده</th>
         <th>حذف</th>
       </tr>
     </thead>
@@ -19,12 +20,27 @@
       <% let num = 1 %> <% posteds.docs.forEach(posted => { %>
       <tr>
         <td><%= num %></td>
-        <td><%= posted.name %> <%= posted.family %></td>
+        <td><%= posted.name %></td>
         <td><%= posted.subject %></td>
-        <td><%= posted.text %></td>
-        <td><%= posted.tel %></td>
+        <td><%= posted.phone %></td>
+        <td><%= posted.message %></td>
+        <td>
+          <form action="/admin/seen/<%= posted.id %>" method="post">
+            <input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
+            <div class="btn-group btn-group-sm">
+              <% if(posted.seen === false){ %>
+              <button type="submit" class="btn btn-warning">دیده نشده</button>
+              <% }else{ %>
+              <button type="submit" class="btn btn-success" disabled>
+                دیده شده
+              </button>
+              <% } %>
+            </div>
+          </form>
+        </td>
         <td>
           <form action="/admin/delete/<%= posted.id %>" method="post">
+            <input type="hidden" name="_csrf" value="<%= req.csrfToken() %>" />
             <div class="btn-group btn-group-sm">
               <button type="submit" class="btn btn-danger">حذف</button>
             </div>

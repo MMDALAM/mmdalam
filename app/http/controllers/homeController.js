@@ -34,16 +34,15 @@ class homeController extends controller {
       }
 
       const posteds = await Posted.find(
-        { seen: false } || { phone: req.body.phone }
-      );
-      console.log(posteds);
+        { phone: req.body.phone } && { seen: false }
+      ).sort({ createdAt: -1 });
 
       if (posteds.length >= 2) {
         if (req.getLocale() == "en") {
           return this.alertAndBack(req, res, {
             title: " pay attention ",
             message:
-              "Your previous request is under review, please wait for our experts to call you",
+              "You have 2 requests under review, please wait for our experts to call you",
             button: " OK ",
             icon: "error",
           });
@@ -51,7 +50,7 @@ class homeController extends controller {
           return this.alertAndBack(req, res, {
             title: "دقت کنید",
             message:
-              " درخواست قبلی شما در حال بررسی است لطفا منتظر تماس کارشناسان ما باشید",
+              " شما 2 درخواست در حال بررسی دارید لطفا منتظر تماس کارشناسان ما باشید",
             button: " بسیار خب ",
             icon: "error",
           });
